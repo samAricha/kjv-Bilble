@@ -55,29 +55,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }else {
         }
+        cursor.close();
         close();
         return returnList;
     }
 
 
     public List<VersesModel> getAllVerses(int bookNo){
-        List<VersesModel> verses =new ArrayList<>();
+        List<VersesModel> versesList =new ArrayList<>();
         open();
-        String querru="SELECT * FROM t_kjv WHERE b="+bookNo;
-        Cursor cursor=myDatabase.rawQuery(querru,null);
+        String query="SELECT * FROM t_kjv WHERE c="+bookNo;
+        Cursor cursor=myDatabase.rawQuery(query,null);
 
         if(cursor.moveToFirst()){
             do{
+                int dbId=cursor.getInt(0);
+                int dbBook=cursor.getInt(1);
+                int dbChapter=cursor.getInt(2);
                int verseNo=cursor.getInt(3);
                String txtVerses=cursor.getString(4);
 
-               VersesModel versesModel=new VersesModel(verseNo, txtVerses);
-               verses.add(versesModel);
+                VersesModel versesModel=new VersesModel(dbId, dbBook, dbChapter,verseNo, txtVerses);
+               versesList.add(versesModel);
+
             }while (cursor.moveToNext());
         }else {
         }
+        cursor.close();
         close();
-        return verses;
+        return versesList;
     }
 
 
